@@ -1,19 +1,20 @@
 import React from "react";
 
 import { AiOutlineClose } from "react-icons/ai";
+import { takoPrice } from "../../data/takoPrice";
+import { useGlobalContext } from "../../context";
 
 import Radio from "../input/Radio";
 import Input from "../input/Input";
 import Button from "../input/Button";
-
 import axios from "axios";
-import { useGlobalContext } from "../../context";
 
 const OrderForm = (props) => {
   const [orderData, setOrderData] = React.useState({
     variety: "HAM & CHEESE",
-    quantity: 8,
-    price: 0,
+    pieces: 8,
+    sets: 1,
+    price: takoPrice["HAM & CHEESE"][8],
     paymentType: "",
     receivingType: "",
     receiverName: "",
@@ -28,8 +29,9 @@ const OrderForm = (props) => {
   const clearForm = () => {
     setOrderData({
       variety: "HAM & CHEESE",
-      quantity: 8,
-      price: 0,
+      pieces: 8,
+      sets: 1,
+      price: takoPrice["HAM & CHEESE"][8],
       paymentType: "",
       receivingType: "",
       receiverName: "",
@@ -43,7 +45,17 @@ const OrderForm = (props) => {
     setOrderData((prev) => {
       return {
         ...prev,
-        [name]: name === "quantity" ? parseInt(value) : value,
+        //change price if variety, pieces, or sets are changed,
+        //did not use reducer because only dependent on few values and requires form for data
+        price:
+          name === "pieces"
+            ? takoPrice[prev.variety][value] * prev.sets
+            : name === "variety"
+            ? takoPrice[value][prev.pieces] * prev.sets
+            : name === "sets"
+            ? takoPrice[prev.variety][prev.pieces] * parseInt(value)
+            : prev.price,
+        [name]: name === "pieces" ? parseInt(value) : value,
       };
     });
   };
@@ -64,7 +76,19 @@ const OrderForm = (props) => {
         { headers: { Authorization: token } }
       );
       if (data) {
-        console.log(data);
+        setOrderData((prev) => {
+          return {
+            ...prev,
+            variety: "HAM & CHEESE",
+            pieces: 8,
+            sets: 1,
+            price: takoPrice["HAM & CHEESE"][8],
+            paymentType: "",
+            receivingType: "",
+            deliveryDate: "",
+            deliveryTime: "",
+          };
+        });
       }
     } catch (error) {
       console.log(error);
@@ -91,11 +115,12 @@ const OrderForm = (props) => {
             Flavor
           </label>
           <select
-            className="w-full rounded-md font-body font-medium text-sm p-3 bg-wht text-blk border-[1px] border-blk-mn"
+            className="w-full rounded-md font-body text-sm p-3 bg-wht text-blk border-[1px] border-blk-mn"
             id="flavor"
             onChange={(e) => handleOrderData(e.target)}
             required={true}
             name="variety"
+            value={orderData.variety}
           >
             <option value="HAM & CHEESE">HAM & CHEESE</option>
             <option value="SPAM & CHEESE">SPAM & CHEESE</option>
@@ -109,17 +134,33 @@ const OrderForm = (props) => {
             Pieces
           </label>
           <select
-            className="w-full rounded-md font-body font-medium text-sm p-3 bg-wht text-blk border-[1px] border-blk-mn"
+            className="w-full rounded-md font-body text-sm p-3 bg-wht text-blk border-[1px] border-blk-mn"
             id="pieces"
             onChange={(e) => handleOrderData(e.target)}
             required={true}
-            name="quantity"
+            name="pieces"
+            value={orderData.pieces}
           >
             <option value={8}>8 PIECES</option>
             <option value={10}>10 PIECES</option>
             <option value={15}>15 PIECES</option>
             <option value={20}>20 PIECES</option>
           </select>
+        </div>
+
+        <div className="cstm-flex-col gap-3 w-full">
+          <label className="font-body text-sm w-full text-left" htmlFor="pieces">
+            Number of Boxes
+          </label>
+          <Input
+            onChange={(e) => handleOrderData(e.target)}
+            type="number"
+            placeholder="Number of Boxes"
+            value={orderData.sets}
+            required={true}
+            css="cursor-pointer p-3"
+            name="sets"
+          />
         </div>
 
         <div className="cstm-flex-col gap-3 w-full">
@@ -170,74 +211,67 @@ const OrderForm = (props) => {
           <label className="font-body text-sm w-full text-left" htmlFor="payment">
             Delivery Date
           </label>
-          <div className="cstm-flex-row gap-5 w-full">
-            <Input
-              onChange={(e) => handleOrderData(e.target)}
-              type="date"
-              placeholder="date"
-              value={orderData.deliveryDate}
-              required={true}
-              css="cursor-pointer p-3"
-              name="deliveryDate"
-            />
-          </div>
+          <Input
+            onChange={(e) => handleOrderData(e.target)}
+            type="date"
+            placeholder="date"
+            value={orderData.deliveryDate}
+            required={true}
+            css="cursor-pointer p-3"
+            name="deliveryDate"
+          />
         </div>
 
         <div className="cstm-flex-col gap-3 w-full">
           <label className="font-body text-sm w-full text-left" htmlFor="payment">
             Delivery Time
           </label>
-          <div className="cstm-flex-row gap-5 w-full">
-            <Input
-              onChange={(e) => handleOrderData(e.target)}
-              type="time"
-              placeholder="time"
-              value={orderData.deliveryTime}
-              required={true}
-              css="cursor-pointer p-3"
-              name="deliveryTime"
-            />
-          </div>
+          <Input
+            onChange={(e) => handleOrderData(e.target)}
+            type="time"
+            placeholder="time"
+            value={orderData.deliveryTime}
+            required={true}
+            css="cursor-pointer p-3"
+            name="deliveryTime"
+          />
         </div>
 
         <div className="cstm-flex-col gap-3 w-full">
           <label className="font-body text-sm w-full text-left" htmlFor="payment">
             Delivery Address
           </label>
-          <div className="cstm-flex-row gap-5 w-full">
-            <Input
-              onChange={(e) => handleOrderData(e.target)}
-              type="text"
-              placeholder="Address"
-              value={orderData.deliveryAddress}
-              required={true}
-              name="deliveryAddress"
-              css="p-3"
-            />
-          </div>
+          <Input
+            onChange={(e) => handleOrderData(e.target)}
+            type="text"
+            placeholder="Address"
+            value={orderData.deliveryAddress}
+            required={true}
+            name="deliveryAddress"
+            css="p-3"
+          />
         </div>
 
         <div className="cstm-flex-col gap-3 w-full">
           <label className="font-body text-sm w-full text-left" htmlFor="payment">
             Receiver Name
           </label>
-          <div className="cstm-flex-row gap-5 w-full">
-            <Input
-              onChange={(e) => handleOrderData(e.target)}
-              type="text"
-              placeholder="Receiver"
-              value={orderData.receiverName}
-              required={true}
-              name="receiverName"
-              css="p-3"
-            />
-          </div>
+          <Input
+            onChange={(e) => handleOrderData(e.target)}
+            type="text"
+            placeholder="Receiver"
+            value={orderData.receiverName}
+            required={true}
+            name="receiverName"
+            css="p-3"
+          />
         </div>
 
         <div
           className="w-full cstm-flex-col gap-5
                     t:cstm-flex-row"
         >
+          <p className="mr-auto font-body font-medium">Price: {orderData.price}.00</p>
           <Button
             css="border-2 border-blk-mn p-3 
                 t:w-48"

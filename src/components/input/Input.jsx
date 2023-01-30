@@ -15,7 +15,7 @@ const Input = (props) => {
         onChange={props.onChange}
         id={props.name}
         required={props.required}
-        className={`${props.css} w-full border-[1px] bg-wht border-blk-sc p-2 focus:border-none focus:outline-1 text-body
+        className={`${props.css} w-full border-[1px] bg-wht border-blk-sc p-2 focus:border-none focus:outline-1 text-body font-body
             text-sm rounded-md
             l-s:text-base`}
       />

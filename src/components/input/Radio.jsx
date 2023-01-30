@@ -3,7 +3,7 @@ import React from "react";
 const Radio = (props) => {
   return (
     <label
-      className={`${props.checked} w-full border-[1px] border-blk-sc focus:border-none focus:outline-1 text-body font-head text-center
+      className={`${props.checked} w-full border-[1px] border-blk-sc focus:border-none focus:outline-1 text-body font-body text-center
                 text-sm rounded-md cursor-pointer 
               bg-wht 
               hover:bg-wht

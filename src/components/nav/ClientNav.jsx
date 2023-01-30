@@ -21,8 +21,8 @@ const ClientNav = () => {
           to="/tm/c/menu"
           className={({ isActive }) =>
             `${
-              isActive ? "bg-red-mn bg-opacity-30 p-1" : null
-            } bg-none hover:bg-red-mn hover:bg-opacity-30 cursor-pointer rounded-sm group relative`
+              isActive ? "bg-red-mn bg-opacity-30" : null
+            } bg-none hover:bg-red-mn hover:bg-opacity-30 p-1 cursor-pointer rounded-sm group relative`
           }
         >
           <p
@@ -40,8 +40,8 @@ const ClientNav = () => {
           to="/tm/c/preparing"
           className={({ isActive }) =>
             `${
-              isActive ? "bg-red-mn bg-opacity-30 p-1" : null
-            } bg-none hover:bg-red-mn hover:bg-opacity-30 cursor-pointer rounded-sm group relative`
+              isActive ? "bg-red-mn bg-opacity-30" : null
+            } bg-none hover:bg-red-mn hover:bg-opacity-30 p-1 cursor-pointer rounded-sm group relative`
           }
         >
           <p
@@ -59,8 +59,8 @@ const ClientNav = () => {
           to="/tm/c/deliveries"
           className={({ isActive }) =>
             `${
-              isActive ? "bg-red-mn bg-opacity-30 p-1" : null
-            } bg-none hover:bg-red-mn hover:bg-opacity-30 cursor-pointer rounded-sm relative group`
+              isActive ? "bg-red-mn bg-opacity-30" : null
+            } bg-none hover:bg-red-mn hover:bg-opacity-30 p-1 cursor-pointer rounded-sm relative group`
           }
         >
           <p
@@ -78,8 +78,8 @@ const ClientNav = () => {
           to="/tm/c/messages"
           className={({ isActive }) =>
             `${
-              isActive ? "bg-red-mn bg-opacity-30 p-1" : null
-            } bg-none hover:bg-red-mn hover:bg-opacity-30 cursor-pointer rounded-sm group relative`
+              isActive ? "bg-red-mn bg-opacity-30" : null
+            } bg-none hover:bg-red-mn hover:bg-opacity-30 p-1 cursor-pointer rounded-sm group relative`
           }
         >
           <p

@@ -8,6 +8,7 @@ import AdminOrders from "./pages/admin/AdminOrders";
 import Menu from "./pages/client/Menu";
 import SingleFlavor from "./pages/client/SingleFlavor";
 import Preparing from "./pages/client/Preparing";
+import SinglePreparation from "./pages/client/SinglePreparation";
 
 function App() {
   return (
@@ -35,6 +36,7 @@ function App() {
             </Route>
             <Route path="preparing">
               <Route index element={<Preparing />} />
+              <Route path=":preparationId" element={<SinglePreparation />} />
             </Route>
           </Route>
         </Route>

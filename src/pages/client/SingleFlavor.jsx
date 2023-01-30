@@ -1,5 +1,5 @@
 import React from "react";
-import { price } from "../../data/takoPrice";
+import { takoPrice } from "../../data/takoPrice";
 import Button from "../../components/input/Button";
 import flavor from "../../images/flavors.png";
 import OrderForm from "../../components/client/OrderForm";
@@ -59,19 +59,19 @@ const SingleFlavor = () => {
         >
           <div className="cstm-flex-row text-wht font-body w-full">
             <p className="mr-auto">8 PIECES</p>
-            <p>{price[currFlavor][8]}</p>
+            <p>P {takoPrice[currFlavor][8]}</p>
           </div>
           <div className="cstm-flex-row text-wht font-body w-full">
             <p className="mr-auto">10 PIECES</p>
-            <p>{price[currFlavor][10]}</p>
+            <p>P {takoPrice[currFlavor][10]}</p>
           </div>
           <div className="cstm-flex-row text-wht font-body w-full">
             <p className="mr-auto">15 PIECES</p>
-            <p>{price[currFlavor][15]}</p>
+            <p>P {takoPrice[currFlavor][15]}</p>
           </div>
           <div className="cstm-flex-row text-wht font-body w-full">
             <p className="mr-auto">20 PIECES</p>
-            <p>{price[currFlavor][20]}</p>
+            <p>P {takoPrice[currFlavor][20]}</p>
           </div>
         </div>
       </div>
