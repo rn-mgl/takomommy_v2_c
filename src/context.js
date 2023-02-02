@@ -4,7 +4,7 @@ import { io } from "socket.io-client";
 const AppContext = React.createContext();
 
 const AppProvider = ({ children }) => {
-  const url = `http://192.168.1.121:9000`;
+  const url = `https://takomommy-server.onrender.com`;
   const socket = io(url);
   const room = localStorage.getItem("tm_id");
 
