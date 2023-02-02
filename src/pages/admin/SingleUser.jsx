@@ -1,15 +1,19 @@
 import React from "react";
 import axios from "axios";
+
 import * as dateFns from "../../functions/dateFns";
 import { useParams, Link } from "react-router-dom";
 import { useGlobalContext } from "../../context";
 import { GoPrimitiveDot } from "react-icons/go";
+
+import Notif from "../../components/global/Notif";
 import Button from "../../components/input/Button";
 import ReputationForm from "../../components/admin/ReputationForm";
 
 const SingleUser = () => {
   const [userData, setUserData] = React.useState({});
   const [canUpdateReputation, setCanUpdateReputation] = React.useState(false);
+  const [notif, setNotif] = React.useState({ msg: "", active: false });
 
   const { url } = useGlobalContext();
   const token = localStorage.getItem("tm_adm_token");
@@ -27,6 +31,7 @@ const SingleUser = () => {
       }
     } catch (error) {
       console.log(error);
+      setNotif({ msg: error.response.data.msg, active: true });
     }
   }, [url, token, buyerId]);
 
@@ -38,6 +43,7 @@ const SingleUser = () => {
 
   return (
     <div className="p-5 pb-20 cstm-flex-col gap-2 t:pt-20 t:pb-5 h-screen">
+      {notif && <Notif notif={notif} setNotif={setNotif} />}
       {canUpdateReputation && (
         <ReputationForm
           toggleUpdateReputation={toggleUpdateReputation}

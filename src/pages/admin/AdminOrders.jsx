@@ -2,6 +2,7 @@ import React from "react";
 import axios from "axios";
 import tupper from "../../images/single-tupper.png";
 import OrderFilter from "../../components/admin/OrderFilter";
+import Notif from "../../components/global/Notif";
 
 import { useGlobalContext } from "../../context";
 import { Link } from "react-router-dom";
@@ -11,6 +12,7 @@ import { AiOutlineRight } from "react-icons/ai";
 const AdminOrders = () => {
   const [orders, setOrders] = React.useState([]);
   const [filter, setFilter] = React.useState("All");
+  const [notif, setNotif] = React.useState({ msg: "", active: false });
 
   const { url, socket } = useGlobalContext();
   const token = localStorage.getItem("tm_adm_token");
@@ -38,6 +40,7 @@ const AdminOrders = () => {
       }
     } catch (error) {
       console.log(error);
+      setNotif({ msg: error.response.data.msg, active: true });
     }
   }, [token, url, filter, socketJoinRoom]);
 
@@ -60,6 +63,7 @@ const AdminOrders = () => {
       className="p-5 pb-20 cstm-flex-col gap-5
                 t:py-20 t:pb-5"
     >
+      {notif && <Notif notif={notif} setNotif={setNotif} />}
       <p className="font-head text-2xl">All Orders</p>
 
       <OrderFilter filter={filter} handleFilter={handleFilter} />

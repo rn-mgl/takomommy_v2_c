@@ -1,5 +1,6 @@
 import React from "react";
 import axios from "axios";
+import Notif from "../../components/global/Notif";
 import { useGlobalContext } from "../../context";
 import { AiOutlineRight } from "react-icons/ai";
 import { Link } from "react-router-dom";
@@ -7,6 +8,7 @@ import { FaUserCircle } from "react-icons/fa";
 
 const Messages = () => {
   const [users, setUsers] = React.useState([]);
+  const [notif, setNotif] = React.useState({ msg: "", active: false });
 
   const { url, socket } = useGlobalContext();
   const token = localStorage.getItem("tm_adm_token");
@@ -29,6 +31,7 @@ const Messages = () => {
       }
     } catch (error) {
       console.log(error);
+      setNotif({ msg: error.response.data.msg, active: true });
     }
   }, [url, token, socketJoinRoom]);
 
@@ -38,6 +41,7 @@ const Messages = () => {
 
   return (
     <div className="p-5 pb-20 cstm-flex-col gap-5 t:py-20 t:pb-5">
+      {notif && <Notif notif={notif} setNotif={setNotif} />}
       <p className="font-head text-2xl">Messages</p>
       <div className="cstm-flex-col gap-2 w-full t:w-10/12 t:items-start l-s:w-8/12">
         {users.map((user) => {

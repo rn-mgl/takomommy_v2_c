@@ -2,6 +2,7 @@ import React from "react";
 
 import tupper from "../../images/single-tupper.png";
 import axios from "axios";
+import Notif from "../../components/global/Notif";
 
 import { GoPrimitiveDot } from "react-icons/go";
 import { AiOutlineRight } from "react-icons/ai";
@@ -10,6 +11,7 @@ import { Link } from "react-router-dom";
 
 const Deliveries = () => {
   const [deliveries, setDeliveries] = React.useState([]);
+  const [notif, setNotif] = React.useState({ msg: "", active: false });
 
   const token = localStorage.getItem("tm_token");
   const { url, socket } = useGlobalContext();
@@ -25,6 +27,7 @@ const Deliveries = () => {
       }
     } catch (error) {
       console.log(error);
+      setNotif({ msg: error.response.data.msg, active: true });
     }
   }, [url, token]);
 
@@ -44,6 +47,7 @@ const Deliveries = () => {
 
   return (
     <div className=" w-full min-h-screen cstm-flex-col gap-5 justify-start p-5 t:pt-20 ">
+      {notif && <Notif notif={notif} setNotif={setNotif} />}
       <p
         className="font-head text-3xl drop-shadow-md
               l-s:text-5xl"

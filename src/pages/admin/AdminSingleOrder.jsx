@@ -3,6 +3,7 @@ import React from "react";
 import axios from "axios";
 import flavors from "../../images/flavors.png";
 import Button from "../../components/input/Button";
+import Notif from "../../components/global/Notif";
 
 import { useParams } from "react-router-dom";
 import { useGlobalContext } from "../../context";
@@ -10,6 +11,7 @@ import { Link, useNavigate } from "react-router-dom";
 
 const AdminSingleOrder = () => {
   const [orderData, setOrderData] = React.useState({});
+  const [notif, setNotif] = React.useState({ msg: "", active: false });
 
   const { orderId } = useParams();
   const { url, socket } = useGlobalContext();
@@ -64,6 +66,7 @@ const AdminSingleOrder = () => {
       }
     } catch (error) {
       console.log(error);
+      setNotif({ msg: error.response.data.msg, active: true });
     }
   }, [url, token, orderId]);
 
@@ -80,6 +83,7 @@ const AdminSingleOrder = () => {
       }
     } catch (error) {
       console.log(error);
+      setNotif({ msg: error.response.data.msg, active: true });
     }
   };
 
@@ -94,6 +98,7 @@ const AdminSingleOrder = () => {
       }
     } catch (error) {
       console.log(error);
+      setNotif({ msg: error.response.data.msg, active: true });
     }
   };
 
@@ -108,6 +113,7 @@ const AdminSingleOrder = () => {
       className="p-5 cstm-flex-col bg-white pb-20  gap-5
             t:pt-20 t:pb-5"
     >
+      {notif && <Notif notif={notif} setNotif={setNotif} />}
       <p
         className="font-head text-3xl drop-shadow-md
               l-s:text-5xl"

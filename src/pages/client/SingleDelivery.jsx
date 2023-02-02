@@ -1,12 +1,14 @@
 import React from "react";
 import axios from "axios";
 import flavors from "../../images/flavors.png";
+import Notif from "../../components/global/Notif";
 
 import { useParams, Link } from "react-router-dom";
 import { useGlobalContext } from "../../context";
 
 const SingleDelivery = () => {
   const [deliveryData, setDeliveryData] = React.useState({});
+  const [notif, setNotif] = React.useState({ msg: "", active: false });
 
   const { url } = useGlobalContext();
   const token = localStorage.getItem("tm_token");
@@ -23,6 +25,7 @@ const SingleDelivery = () => {
       }
     } catch (error) {
       console.log(error);
+      setNotif({ msg: error.response.data.msg, active: true });
     }
   }, [url, token, deliveryId]);
 
@@ -35,6 +38,7 @@ const SingleDelivery = () => {
       className="p-5 cstm-flex-col bg-white pb-20  gap-5
             t:pt-20 t:pb-5"
     >
+      {notif && <Notif notif={notif} setNotif={setNotif} />}
       <p
         className="font-head text-3xl drop-shadow-md
               l-s:text-5xl"

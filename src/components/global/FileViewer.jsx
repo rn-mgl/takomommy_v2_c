@@ -7,7 +7,7 @@ const FileViewer = (props) => {
   const isAudio = type === "video" && props.file?.endsWith(".mp3");
 
   return (
-    <div className="cstm-flex-col">
+    <div className="cstm-flex-col p-2">
       {type === "image" ? (
         <img className="max-h-20" src={props.file} alt="file" />
       ) : type === "video" && !isAudio ? (

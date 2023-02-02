@@ -2,6 +2,12 @@ import axios from "axios";
 
 export const sendFile = async (e, url, token) => {
   const file = e.target.file.files[0];
+  const size = file.size;
+
+  if (size >= 10000000) {
+    return "Error:File size too large. Must be below 10MB.";
+  }
+
   const formData = new FormData();
   formData.append("file", file);
 
@@ -19,7 +25,7 @@ export const sendFile = async (e, url, token) => {
     }
   } catch (error) {
     console.log(error);
-    return fileLink;
+    return `Error:${error.response.data.msg}`;
   }
 };
 

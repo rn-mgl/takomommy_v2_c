@@ -1,16 +1,18 @@
 import React from "react";
-import { Link, useParams } from "react-router-dom";
-import { BsArrowRight } from "react-icons/bs";
+
 import takoyaki from "../../images/takoyaki.png";
 import tupper from "../../images/takoyaki-tupper.png";
 import axios from "axios";
+import Notif from "../../components/global/Notif";
+
 import { useGlobalContext } from "../../context";
+import { Link, useParams } from "react-router-dom";
+import { BsArrowRight } from "react-icons/bs";
 
 const Verify = () => {
-  const [isVeried, setIsVerified] = React.useState(false);
+  const [notif, setNotif] = React.useState({ msg: "", active: false });
   const { token } = useParams();
   const { url } = useGlobalContext();
-  console.log(token);
   const verifyUser = React.useCallback(async () => {
     try {
       const { data } = await axios.patch(`${url}/auth/ver/${token}`, { verified: 1 });
@@ -20,6 +22,7 @@ const Verify = () => {
       }
     } catch (error) {
       console.log(error);
+      setNotif({ msg: error.response.data.msg, active: true });
     }
   }, [token, url]);
 
@@ -29,6 +32,7 @@ const Verify = () => {
 
   return (
     <div className="bg-wht h-screen max-h-screen cstm-flex-col overflow-hidden">
+      {notif && <Notif notif={notif} setNotif={setNotif} />}
       <img
         src={takoyaki}
         alt="takoyaki"

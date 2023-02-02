@@ -5,6 +5,8 @@ import { BsArrowLeft } from "react-icons/bs";
 import Input from "../../components/input/Input";
 import Button from "../../components/input/Button";
 import Logo from "../../components/global/Logo";
+import * as textFns from "../../functions/textFns";
+import Notif from "../../components/global/Notif";
 
 import axios from "axios";
 import { useGlobalContext } from "../../context";
@@ -14,6 +16,7 @@ const Login = () => {
     candidate_email: "",
     candidate_password: "",
   });
+  const [notif, setNotif] = React.useState({ msg: "", active: false });
 
   const { url } = useGlobalContext();
   const navigate = useNavigate();
@@ -21,6 +24,10 @@ const Login = () => {
   const login = async (e) => {
     e.preventDefault();
     const { candidate_email, candidate_password } = loginData;
+    if (textFns.isBothBW(candidate_email) || textFns.isBothBW(candidate_password)) {
+      setNotif({ msg: "Please enter appropriate values.", active: true });
+      return;
+    }
     try {
       const { data } = await axios.post(`${url}/auth/log`, { candidate_email, candidate_password });
       if (data) {
@@ -41,6 +48,7 @@ const Login = () => {
       }
     } catch (error) {
       console.log(error);
+      setNotif({ msg: error.response.data.msg, active: true });
     }
   };
 
@@ -58,6 +66,7 @@ const Login = () => {
       className="h-screen min-h-screen bg-wht p-5 cstm-flex-col relative overflow-hidden
             l-s:cstm-flex-row"
     >
+      {notif && <Notif notif={notif} setNotif={setNotif} />}
       <Logo />
       <div
         className="h-2/6 w-full rounded-t-md bg-white cstm-flex-col

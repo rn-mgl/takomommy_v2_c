@@ -4,10 +4,12 @@ import { BsArrowRight } from "react-icons/bs";
 
 import axios from "axios";
 import { useGlobalContext } from "../../context";
+import * as textFns from "../../functions/textFns";
 
 import Input from "../../components/input/Input";
 import Button from "../../components/input/Button";
 import Logo from "../../components/global/Logo";
+import Notif from "../../components/global/Notif";
 
 const SignUp = () => {
   const [signUpData, setSignUpData] = React.useState({
@@ -17,12 +19,23 @@ const SignUp = () => {
     email: "",
     number: "",
   });
+  const [notif, setNotif] = React.useState({ msg: "", active: false });
 
   const { url } = useGlobalContext();
 
   const signUp = async (e) => {
     e.preventDefault();
     const { name, surname, email, number, password } = signUpData;
+    if (
+      textFns.isBothBW(name) ||
+      textFns.isBothBW(surname) ||
+      textFns.isBothBW(email) ||
+      textFns.isBothBW(number) ||
+      textFns.isBothBW(password)
+    ) {
+      setNotif({ msg: "Please enter appropriate values.", active: true });
+      return;
+    }
     try {
       const { data } = await axios.post(`${url}/auth/reg`, {
         name,
@@ -43,6 +56,7 @@ const SignUp = () => {
       }
     } catch (error) {
       console.log(error);
+      setNotif({ msg: error.response.data.msg, active: true });
     }
   };
 
@@ -60,8 +74,8 @@ const SignUp = () => {
       className="h-screen min-h-screen bg-wht p-5 cstm-flex-col relative overflow-hidden
                 l-s:cstm-flex-row"
     >
+      {notif && <Notif notif={notif} setNotif={setNotif} />}
       <Logo />
-
       <div
         className="h-3/6 w-full rounded-t-md bg-white cstm-flex-col
                   l-s:h-5/6 l-s:rounded-tr-none l-s:rounded-l-md"

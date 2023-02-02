@@ -11,12 +11,14 @@ import TextArea from "../../components/input/TextArea";
 import FilePreview from "../../components/global/FilePreview";
 import FileViewer from "../../components/global/FileViewer";
 import FileIcon from "../../components/input/FileIcon";
+import Notif from "../../components/global/Notif";
 
 import { Link, useParams } from "react-router-dom";
 import { BsArrowLeft } from "react-icons/bs";
 
 const SingleMessage = () => {
   const [messages, setMessages] = React.useState([]);
+  const [notif, setNotif] = React.useState({ msg: "", active: false });
   const [selectedFile, setSelectedFile] = React.useState({ fileUrl: undefined, fileType: "" });
   const [messageData, setMessageData] = React.useState({
     type: window.location.pathname.split("/")[2],
@@ -63,6 +65,7 @@ const SingleMessage = () => {
       }
     } catch (error) {
       console.log(error);
+      setNotif({ msg: error.response.data.msg, active: true });
     }
   }, [url, token, messageId]);
 
@@ -70,6 +73,7 @@ const SingleMessage = () => {
     e.preventDefault();
 
     if ((!messageData.message && !messageData.file) || textFns.isBlank(messageData.file)) {
+      setNotif({ msg: "Please enter appropriate values.", active: true });
       return;
     }
 
@@ -88,6 +92,11 @@ const SingleMessage = () => {
       }
     } else {
       messageData.file = null;
+    }
+
+    if (fileLink?.startsWith("Error")) {
+      setNotif({ msg: fileLink, active: true });
+      return;
     }
 
     try {
@@ -110,6 +119,7 @@ const SingleMessage = () => {
       }
     } catch (error) {
       console.log(error);
+      setNotif({ msg: error.response.data.msg, active: true });
     }
   };
 
@@ -136,6 +146,7 @@ const SingleMessage = () => {
       className="p-5 pb-14 min-h-screen bg-wht w-full cstm-flex-col gap-2 justify-start relative
                 t:pt-20 t:pb-5"
     >
+      {notif && <Notif notif={notif} setNotif={setNotif} />}
       <div
         className="absolute bg-white rounded-md w-11/12 h-[87%] p-3 cstm-flex-col gap-2
                   t:h-5/6 t:w-8/12"
@@ -145,7 +156,13 @@ const SingleMessage = () => {
         </Link>
 
         <div className="w-full h-full max-h-full cstm-flex-col overflow-y-auto gap-2 justify-start p-2 flex-col-reverse">
-          {selectedFile.fileUrl ? <FilePreview selectedFile={selectedFile} /> : null}
+          {selectedFile.fileUrl ? (
+            <FilePreview
+              setSelectedFile={setSelectedFile}
+              setMessageData={setMessageData}
+              selectedFile={selectedFile}
+            />
+          ) : null}
           {messages.map((msg) => {
             const isSender = msg.sender === user;
             const isSelected = selectedMessage === msg._id;
@@ -157,7 +174,11 @@ const SingleMessage = () => {
                     isSender ? "ml-auto bg-blk-sc text-wht" : "mr-auto bg-wht text-blk-mn "
                   } py-1 px-2 rounded-md  text-sm w-fit`}
                 >
-                  {msg?.message ? <p className="whitespace-pre-wrap">{msg.message}</p> : null}
+                  {msg?.message ? (
+                    <p className="whitespace-pre-wrap break-words max-w-[10rem] t:max-w-xs">
+                      {msg.message}
+                    </p>
+                  ) : null}
                   {msg?.file ? <FileViewer file={msg.file} /> : null}
                 </div>
                 {isSelected ? (
