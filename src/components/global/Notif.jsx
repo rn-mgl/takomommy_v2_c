@@ -6,6 +6,7 @@ const Notif = ({ notif, setNotif }) => {
       setNotif({ msg: "", active: false });
     }, [5000]);
   }
+
   return (
     notif.active && (
       <div

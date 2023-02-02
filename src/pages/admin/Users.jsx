@@ -28,8 +28,6 @@ const Users = () => {
     getUsers();
   }, [getUsers]);
 
-  console.log(users);
-
   return (
     <div className="p-5 pb-20 cstm-flex-col gap-5 t:py-20 t:pb-5">
       <p className="font-head text-2xl">Buyers</p>

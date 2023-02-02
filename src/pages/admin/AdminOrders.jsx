@@ -2,7 +2,6 @@ import React from "react";
 import axios from "axios";
 import tupper from "../../images/single-tupper.png";
 import OrderFilter from "../../components/admin/OrderFilter";
-import tako from "../../images/takoyaki.png";
 
 import { useGlobalContext } from "../../context";
 import { Link } from "react-router-dom";
@@ -13,8 +12,15 @@ const AdminOrders = () => {
   const [orders, setOrders] = React.useState([]);
   const [filter, setFilter] = React.useState("All");
 
-  const { url } = useGlobalContext();
+  const { url, socket } = useGlobalContext();
   const token = localStorage.getItem("tm_adm_token");
+
+  const socketJoinRoom = React.useCallback(
+    (orderedBy) => {
+      socket.emit("join-room", { room: orderedBy });
+    },
+    [socket]
+  );
 
   const handleFilter = (value) => {
     setFilter(value);
@@ -28,15 +34,26 @@ const AdminOrders = () => {
       });
       if (data) {
         setOrders(data);
+        data.map((order) => socketJoinRoom(order.orderedBy));
       }
     } catch (error) {
       console.log(error);
     }
-  }, [token, url, filter]);
+  }, [token, url, filter, socketJoinRoom]);
+
+  const socketOnOrder = React.useCallback(() => {
+    socket.on("reflect-place-order", () => {
+      getOrders();
+    });
+  }, [socket, getOrders]);
 
   React.useEffect(() => {
     getOrders();
   }, [getOrders]);
+
+  React.useEffect(() => {
+    socketOnOrder();
+  }, [socketOnOrder]);
 
   return (
     <div

@@ -8,8 +8,15 @@ import { FaUserCircle } from "react-icons/fa";
 const Messages = () => {
   const [users, setUsers] = React.useState([]);
 
-  const { url } = useGlobalContext();
+  const { url, socket } = useGlobalContext();
   const token = localStorage.getItem("tm_adm_token");
+
+  const socketJoinRoom = React.useCallback(
+    (id) => {
+      socket.emit("join-room", { room: id });
+    },
+    [socket]
+  );
 
   const getUsers = React.useCallback(async () => {
     try {
@@ -18,17 +25,16 @@ const Messages = () => {
       });
       if (data) {
         setUsers(data);
+        data.map((user) => socketJoinRoom(user._id));
       }
     } catch (error) {
       console.log(error);
     }
-  }, [url, token]);
+  }, [url, token, socketJoinRoom]);
 
   React.useEffect(() => {
     getUsers();
   }, [getUsers]);
-
-  console.log(users);
 
   return (
     <div className="p-5 pb-20 cstm-flex-col gap-5 t:py-20 t:pb-5">

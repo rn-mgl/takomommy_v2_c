@@ -13,7 +13,7 @@ import { useGlobalContext } from "../../context";
 
 const CancelOrderForm = (props) => {
   const [reason, setReason] = React.useState("");
-  const [notif, setNotif] = React.useState({ msg: "", active: true });
+  const [notif, setNotif] = React.useState({ msg: "", active: false });
 
   const handleReason = ({ value }) => {
     setReason(value);

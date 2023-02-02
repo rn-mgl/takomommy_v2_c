@@ -13,7 +13,7 @@ import * as textFns from "../../functions/textFns";
 import Notif from "../global/Notif";
 
 const OrderForm = (props) => {
-  const [notif, setNotif] = React.useState({ msg: "", active: true });
+  const [notif, setNotif] = React.useState({ msg: "", active: false });
   const [orderData, setOrderData] = React.useState({
     variety: "HAM & CHEESE",
     pieces: 8,
@@ -27,8 +27,13 @@ const OrderForm = (props) => {
     deliveryAddress: "",
   });
 
-  const { url } = useGlobalContext();
+  const { url, socket } = useGlobalContext();
   const token = localStorage.getItem("tm_token");
+  const id = localStorage.getItem("tm_id");
+
+  const socketPlaceOrder = () => {
+    socket.emit("place-order", { room: id });
+  };
 
   const clearForm = () => {
     setOrderData({
@@ -100,6 +105,7 @@ const OrderForm = (props) => {
             deliveryTime: "",
           };
         });
+        socketPlaceOrder();
       }
     } catch (error) {
       console.log(error);

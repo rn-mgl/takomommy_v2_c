@@ -24,13 +24,21 @@ const Message = () => {
     file: undefined,
   });
 
-  const { url } = useGlobalContext();
+  const { url, socket } = useGlobalContext();
   const token = localStorage.getItem("tm_token");
   const user = localStorage.getItem("tm_id");
 
   const handleSelectedMessage = (id) => {
     setSelectedMessage((prev) => (id === prev ? "" : id));
   };
+
+  const socketSendMessage = () => {
+    socket.emit("send-message", { room: user });
+  };
+
+  const socketJoinRoom = React.useCallback(() => {
+    socket.emit("join-room", { room: user });
+  }, [socket, user]);
 
   const handleMessageData = ({ name, value }) => {
     setMessageData((prev) => {
@@ -85,6 +93,7 @@ const Message = () => {
         { headers: { Authorization: token } }
       );
       if (data) {
+        socketSendMessage();
         getMessages();
         setMessageData((prev) => {
           return {
@@ -100,9 +109,23 @@ const Message = () => {
     }
   };
 
+  const socketReceiveMessage = React.useCallback(() => {
+    socket.on("receive-message", (room) => {
+      getMessages();
+    });
+  }, [getMessages, socket]);
+
   React.useEffect(() => {
     getMessages();
   }, [getMessages]);
+
+  React.useEffect(() => {
+    socketJoinRoom();
+  }, [socketJoinRoom]);
+
+  React.useEffect(() => {
+    socketReceiveMessage();
+  }, [socketReceiveMessage]);
 
   return (
     <div

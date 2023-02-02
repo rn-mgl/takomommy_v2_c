@@ -12,7 +12,7 @@ const SinglePreparation = () => {
   const [prepData, setPrepData] = React.useState({});
   const { preparationId } = useParams();
 
-  const { url } = useGlobalContext();
+  const { url, socket } = useGlobalContext();
   const token = localStorage.getItem("tm_token");
 
   const toggleCanCancelOrder = () => {
@@ -32,9 +32,19 @@ const SinglePreparation = () => {
     }
   }, [url, token, preparationId]);
 
+  const socketOrderUpdateReflect = React.useCallback(() => {
+    socket.on("reflect-update-order", () => {
+      getPrepData();
+    });
+  }, [getPrepData, socket]);
+
   React.useEffect(() => {
     getPrepData();
   }, [getPrepData]);
+
+  React.useEffect(() => {
+    socketOrderUpdateReflect();
+  }, [socketOrderUpdateReflect]);
 
   return (
     <div
@@ -135,7 +145,7 @@ const SinglePreparation = () => {
               All Orders
             </Link>
             {prepData?.status !== "Requesting Cancellation" &&
-            prepData?.status !== "Order Canceled" ? (
+            prepData?.status !== "Cancellation Confirmed" ? (
               <Button
                 onClick={toggleCanCancelOrder}
                 css="bg-red-mn text-white"

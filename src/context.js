@@ -6,6 +6,14 @@ const AppContext = React.createContext();
 const AppProvider = ({ children }) => {
   const url = `http://192.168.1.121:9000`;
   const socket = io(url);
+  const room = localStorage.getItem("tm_id");
+
+  React.useEffect(() => {
+    if (room) {
+      socket.emit("join-room", { room });
+    }
+  }, [room, socket]);
+
   return <AppContext.Provider value={{ url, socket }}>{children}</AppContext.Provider>;
 };
 

@@ -12,11 +12,14 @@ const Deliveries = () => {
   const [deliveries, setDeliveries] = React.useState([]);
 
   const token = localStorage.getItem("tm_token");
-  const { url } = useGlobalContext();
+  const { url, socket } = useGlobalContext();
 
   const getDeliveries = React.useCallback(async () => {
     try {
-      const { data } = await axios.get(`${url}/delivery`, { headers: { Authorization: token } });
+      const { data } = await axios.get(`${url}/orders`, {
+        params: { type: "d" }, // delivery
+        headers: { Authorization: token },
+      });
       if (data) {
         setDeliveries(data);
       }
@@ -25,11 +28,19 @@ const Deliveries = () => {
     }
   }, [url, token]);
 
+  const socketOrderUpdateReflect = React.useCallback(() => {
+    socket.on("reflect-update-order", () => {
+      getDeliveries();
+    });
+  }, [getDeliveries, socket]);
+
   React.useEffect(() => {
     getDeliveries();
   }, [getDeliveries]);
 
-  console.log(deliveries);
+  React.useEffect(() => {
+    socketOrderUpdateReflect();
+  }, [socketOrderUpdateReflect]);
 
   return (
     <div className=" w-full min-h-screen cstm-flex-col gap-5 justify-start p-5 t:pt-20 ">

@@ -12,9 +12,19 @@ const AdminSingleOrder = () => {
   const [orderData, setOrderData] = React.useState({});
 
   const { orderId } = useParams();
-  const { url } = useGlobalContext();
+  const { url, socket } = useGlobalContext();
   const token = localStorage.getItem("tm_adm_token");
   const navigate = useNavigate();
+
+  const socketUpdateOrder = () => {
+    socket.emit("update-order", { room: orderData?.orderedBy });
+  };
+
+  const finishedProcess =
+    orderData.status === "Successful" ||
+    orderData.status === "Cancellation Confirmed" ||
+    orderData.status === "Order Rejected" ||
+    orderData.status === "Cancelled";
 
   const buttonLabelPos =
     orderData.status === "Requesting"
@@ -27,7 +37,9 @@ const AdminSingleOrder = () => {
       ? "Successful"
       : orderData.status === "Delivery Failed"
       ? "Message Us"
-      : "Message Us";
+      : finishedProcess
+      ? "Delete"
+      : "Delete";
 
   const buttonLabelNeg =
     orderData.status === "Requesting"
@@ -41,12 +53,6 @@ const AdminSingleOrder = () => {
       : orderData.status === "Delivery Failed"
       ? "Cancel"
       : "Cancel";
-
-  const finishedProcess =
-    orderData.status === "Successful" ||
-    orderData.status === "Cancellation Confirmed" ||
-    orderData.status === "Order Rejected" ||
-    orderData.status === "Cancelled";
 
   const getOrderData = React.useCallback(async () => {
     try {
@@ -69,12 +75,29 @@ const AdminSingleOrder = () => {
         { headers: { Authorization: token } }
       );
       if (data) {
+        socketUpdateOrder();
         navigate("/tm/a/orders");
       }
     } catch (error) {
       console.log(error);
     }
   };
+
+  const deleteOrder = async () => {
+    try {
+      const { data } = await axios.delete(`${url}/admin/rcvd_orders/${orderId}`, {
+        headers: { Authorization: token },
+      });
+      if (data) {
+        socketUpdateOrder();
+        navigate("/tm/a/orders");
+      }
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
+  const orderResponse = finishedProcess ? deleteOrder : respondToOrder;
 
   React.useEffect(() => {
     getOrderData();
@@ -173,43 +196,20 @@ const AdminSingleOrder = () => {
               All Orders
             </Link>
             {/* no more process if successful, cancellation is confirmed, or order is rejected */}
+
+            <Button
+              css="bg-red-mn text-white"
+              label={buttonLabelPos}
+              onClick={() => orderResponse(buttonLabelPos)}
+            />
             {!finishedProcess ? (
-              <>
-                <Button
-                  css="bg-red-mn text-white"
-                  label={buttonLabelPos}
-                  onClick={() => respondToOrder(buttonLabelPos)}
-                />
-                <Button
-                  css="border-red-mn text-red-mn border-2"
-                  label={buttonLabelNeg}
-                  onClick={() => respondToOrder(buttonLabelNeg)}
-                />
-              </>
+              <Button
+                css="border-red-mn text-red-mn border-2"
+                label={buttonLabelNeg}
+                onClick={() => respondToOrder(buttonLabelNeg)}
+              />
             ) : null}
           </div>
-
-          <p className="text-xs font-body text-justify indent-10">
-            <b>Note:</b> You can't cancel order if <b>2 hours</b> has already passed. Send a message{" "}
-            <a
-              href={`http://192.168.1.121:3000/tm/c/message`}
-              target="_blank"
-              rel="noreferrer noopener"
-              className="text-red-mn underline"
-            >
-              here
-            </a>{" "}
-            or in the{" "}
-            <a
-              href={`http://192.168.1.121:3000/tm/c/message`}
-              target="_blank"
-              rel="noreferrer noopener"
-              className="text-red-mn underline"
-            >
-              facebook page
-            </a>{" "}
-            for assistance.
-          </p>
         </div>
       </div>
     </div>

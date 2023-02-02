@@ -11,25 +11,39 @@ import { Link } from "react-router-dom";
 const Preparing = () => {
   const [orders, setOrders] = React.useState([]);
 
-  const { url } = useGlobalContext();
+  const { url, socket } = useGlobalContext();
   const token = localStorage.getItem("tm_token");
 
-  React.useEffect(() => {
-    const getAllOrders = async () => {
-      try {
-        const { data } = await axios.get(`${url}/orders`, { headers: { Authorization: token } });
-        if (data) {
-          setOrders(data);
-        }
-      } catch (error) {
-        console.log(error);
+  const getAllOrders = React.useCallback(async () => {
+    try {
+      const { data } = await axios.get(`${url}/orders`, {
+        params: { type: "p" }, // preparing
+        headers: { Authorization: token },
+      });
+      if (data) {
+        setOrders(data);
       }
-    };
-    getAllOrders();
+    } catch (error) {
+      console.log(error);
+    }
   }, [token, url]);
 
+  const socketOrderUpdateReflect = React.useCallback(() => {
+    socket.on("reflect-update-order", () => {
+      getAllOrders();
+    });
+  }, [getAllOrders, socket]);
+
+  React.useEffect(() => {
+    getAllOrders();
+  }, [getAllOrders]);
+
+  React.useEffect(() => {
+    socketOrderUpdateReflect();
+  }, [socketOrderUpdateReflect]);
+
   return (
-    <div className=" w-full min-h-screen cstm-flex-col gap-5 justify-start p-5 t:pt-20 ">
+    <div className=" w-full min-h-screen cstm-flex-col gap-5 justify-start p-5 pb-20 t:pt-20 t:pb-5 ">
       <p
         className="font-head text-3xl drop-shadow-md
                   l-s:text-5xl"
