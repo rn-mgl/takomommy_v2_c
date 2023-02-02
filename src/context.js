@@ -6,7 +6,6 @@ const AppContext = React.createContext();
 const AppProvider = ({ children }) => {
   const url = `http://192.168.1.121:9000`;
   const socket = io(url);
-
   return <AppContext.Provider value={{ url, socket }}>{children}</AppContext.Provider>;
 };
 

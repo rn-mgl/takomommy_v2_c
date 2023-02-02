@@ -12,10 +12,11 @@ const Input = (props) => {
         placeholder={props.placeholder}
         name={props.name}
         value={props.value}
+        disabled={props.disabled}
         onChange={props.onChange}
         id={props.name}
         required={props.required}
-        className={`${props.css} w-full border-[1px] bg-wht border-blk-sc p-2 focus:border-none focus:outline-1 text-body font-body
+        className={`${props.css} disabled:bg-neutral-300 w-full border-[1px] bg-wht border-blk-sc p-2 focus:border-none focus:outline-1 text-body font-body
             text-sm rounded-md
             l-s:text-base`}
       />

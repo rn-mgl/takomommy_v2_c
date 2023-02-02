@@ -9,6 +9,16 @@ import Menu from "./pages/client/Menu";
 import SingleFlavor from "./pages/client/SingleFlavor";
 import Preparing from "./pages/client/Preparing";
 import SinglePreparation from "./pages/client/SinglePreparation";
+import Deliveries from "./pages/client/Deliveries";
+import SingleDelivery from "./pages/client/SingleDelivery";
+import Message from "./pages/global/Message";
+import AdminSingleOrder from "./pages/admin/AdminSingleOrder";
+import Users from "./pages/admin/Users";
+import SingleUser from "./pages/admin/SingleUser";
+import Messages from "./pages/admin/Messages";
+import SingleMessage from "./pages/admin/SingleMessage";
+import UserProtectedRoute from "./pages/auth/UserProtectedRoute";
+import AdminProtectedRoute from "./pages/auth/AdminProtectedRoute";
 
 function App() {
   return (
@@ -23,21 +33,149 @@ function App() {
         <Route path="/tm" element={<Nav />}>
           {/* admin */}
           <Route path="a">
-            <Route path="orders" element={<AdminOrders />} />
+            <Route path="orders">
+              <Route
+                index
+                element={
+                  <AdminProtectedRoute>
+                    <AdminOrders />
+                  </AdminProtectedRoute>
+                }
+              />
+              <Route
+                path=":orderId"
+                element={
+                  <AdminProtectedRoute>
+                    <AdminSingleOrder />
+                  </AdminProtectedRoute>
+                }
+              />
+            </Route>
+            <Route path="buyers">
+              <Route
+                index
+                element={
+                  <AdminProtectedRoute>
+                    <Users />
+                  </AdminProtectedRoute>
+                }
+              />
+              <Route
+                path=":buyerId"
+                element={
+                  <AdminProtectedRoute>
+                    <SingleUser />
+                  </AdminProtectedRoute>
+                }
+              />
+            </Route>
+            <Route path="messages">
+              <Route
+                index
+                element={
+                  <AdminProtectedRoute>
+                    <Messages />
+                  </AdminProtectedRoute>
+                }
+              />
+              <Route
+                path=":messageId"
+                element={
+                  <AdminProtectedRoute>
+                    <SingleMessage />
+                  </AdminProtectedRoute>
+                }
+              />
+            </Route>
           </Route>
           {/* client */}
           <Route path="c">
             <Route path="menu">
-              <Route index element={<Menu />} />
-              <Route path="hc" element={<SingleFlavor />} />
-              <Route path="sc" element={<SingleFlavor />} />
-              <Route path="cc" element={<SingleFlavor />} />
-              <Route path="ob" element={<SingleFlavor />} />
+              <Route
+                index
+                element={
+                  <UserProtectedRoute>
+                    <Menu />
+                  </UserProtectedRoute>
+                }
+              />
+              <Route
+                path="hc"
+                element={
+                  <UserProtectedRoute>
+                    <SingleFlavor />
+                  </UserProtectedRoute>
+                }
+              />
+              <Route
+                path="sc"
+                element={
+                  <UserProtectedRoute>
+                    <SingleFlavor />
+                  </UserProtectedRoute>
+                }
+              />
+              <Route
+                path="cc"
+                element={
+                  <UserProtectedRoute>
+                    <SingleFlavor />
+                  </UserProtectedRoute>
+                }
+              />
+              <Route
+                path="ob"
+                element={
+                  <UserProtectedRoute>
+                    <SingleFlavor />
+                  </UserProtectedRoute>
+                }
+              />
             </Route>
             <Route path="preparing">
-              <Route index element={<Preparing />} />
-              <Route path=":preparationId" element={<SinglePreparation />} />
+              <Route
+                index
+                element={
+                  <UserProtectedRoute>
+                    <Preparing />
+                  </UserProtectedRoute>
+                }
+              />
+              <Route
+                path=":preparationId"
+                element={
+                  <UserProtectedRoute>
+                    <SinglePreparation />
+                  </UserProtectedRoute>
+                }
+              />
             </Route>
+            <Route path="deliveries">
+              <Route
+                index
+                element={
+                  <UserProtectedRoute>
+                    <Deliveries />
+                  </UserProtectedRoute>
+                }
+              />
+              <Route
+                path=":deliveryId"
+                element={
+                  <UserProtectedRoute>
+                    <SingleDelivery />
+                  </UserProtectedRoute>
+                }
+              />
+            </Route>
+            <Route
+              path="message"
+              element={
+                <UserProtectedRoute>
+                  <Message />
+                </UserProtectedRoute>
+              }
+            />
           </Route>
         </Route>
       </Routes>

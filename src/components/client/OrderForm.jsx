@@ -9,7 +9,11 @@ import Input from "../input/Input";
 import Button from "../input/Button";
 import axios from "axios";
 
+import * as textFns from "../../functions/textFns";
+import Notif from "../global/Notif";
+
 const OrderForm = (props) => {
+  const [notif, setNotif] = React.useState({ msg: "", active: true });
   const [orderData, setOrderData] = React.useState({
     variety: "HAM & CHEESE",
     pieces: 8,
@@ -69,6 +73,13 @@ const OrderForm = (props) => {
       "1970-01-01T" + orderData.deliveryTime + ":00Z"
     ).toLocaleTimeString(); // 24hr format to 12hr
 
+    const { deliveryAddress, receiverName } = orderData;
+
+    if (textFns.isBothBW(deliveryAddress) || textFns.isBothBW(receiverName)) {
+      setNotif({ msg: "Please enter appropriate values.", active: true });
+      return;
+    }
+
     try {
       const { data } = await axios.post(
         `${url}/orders`,
@@ -92,6 +103,7 @@ const OrderForm = (props) => {
       }
     } catch (error) {
       console.log(error);
+      setNotif({ msg: error.response.data.msg, active: true });
     }
   };
 
@@ -100,6 +112,7 @@ const OrderForm = (props) => {
       className="fixed  w-full h-full backdrop-blur-sm z-10 cstm-flex-col justify-start top-2/4 -translate-y-2/4 overscroll-contain
                 t:p-5 t:top-14 t:translate-y-0"
     >
+      {notif && <Notif notif={notif} setNotif={setNotif} />}
       <form
         onSubmit={(e) => placeOrder(e)}
         className="w-11/12 h-[92%] bg-white rounded-md p-5 overflow-y-auto cstm-flex-col justify-start gap-5 shadow-md overscroll-contain

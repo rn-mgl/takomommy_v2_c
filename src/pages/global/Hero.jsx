@@ -43,7 +43,7 @@ const Hero = () => {
           />
         </Link>
         <Link to="/auth/login" className="w-full">
-          <Button css="bg-red-mn text-wht hover:bg-red-sc" label="Log In" />
+          <Button css="bg-red-mn text-wht hover:bg-red-sc border-red-mn border-2" label="Log In" />
         </Link>
       </div>
       <a

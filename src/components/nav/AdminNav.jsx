@@ -55,25 +55,6 @@ const AdminNav = () => {
         </NavLink>
 
         <NavLink
-          to="/tm/a/deliveries"
-          className={({ isActive }) =>
-            `${
-              isActive ? "bg-red-mn bg-opacity-30" : null
-            } bg-none hover:bg-red-mn hover:bg-opacity-30 p-1 cursor-pointer rounded-sm group relative`
-          }
-        >
-          <p
-            className="absolute hidden font-body text-xs p-1 shadow-md -translate-y-10 transition-all left-2/4 -translate-x-2/4
-                    bg-wht text-blk-mn font-medium rounded-sm group-hover:flex
-                      t:translate-y-7
-                      l-l:text-sm"
-          >
-            Delivery
-          </p>
-          <MdOutlineDeliveryDining />
-        </NavLink>
-
-        <NavLink
           to="/tm/a/messages"
           className={({ isActive }) =>
             `${

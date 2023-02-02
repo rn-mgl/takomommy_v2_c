@@ -24,7 +24,6 @@ const Login = () => {
     try {
       const { data } = await axios.post(`${url}/auth/log`, { candidate_email, candidate_password });
       if (data) {
-        localStorage.setItem("tm_token", `Bearer ${data.token}`);
         localStorage.setItem("tm_id", data.id);
         localStorage.setItem("tm_handler", data.handler);
         localStorage.setItem("tm_verified", data.verified);
@@ -33,8 +32,10 @@ const Login = () => {
           candidate_password: "",
         });
         if (data.handler) {
+          localStorage.setItem("tm_adm_token", `Admin__Bearer__Token ${data.token}`);
           navigate("/tm/a/orders");
         } else {
+          localStorage.setItem("tm_token", `Bearer ${data.token}`);
           navigate("/tm/c/menu");
         }
       }

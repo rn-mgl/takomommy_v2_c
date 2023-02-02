@@ -75,7 +75,7 @@ const ClientNav = () => {
         </NavLink>
 
         <NavLink
-          to="/tm/c/messages"
+          to="/tm/c/message"
           className={({ isActive }) =>
             `${
               isActive ? "bg-red-mn bg-opacity-30" : null
