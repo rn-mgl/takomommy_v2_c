@@ -157,7 +157,7 @@ const SinglePreparation = () => {
           <p className="text-xs font-body text-justify indent-10">
             <b>Note:</b> You can't cancel order if <b>2 hours</b> has already passed. Send a message{" "}
             <a
-              href={`http://192.168.1.121:3000/tm/c/message`}
+              href={`https://takomommy.vercel.app/tm/c/message`}
               target="_blank"
               rel="noreferrer noopener"
               className="text-red-mn underline"
@@ -166,7 +166,7 @@ const SinglePreparation = () => {
             </a>{" "}
             or in the{" "}
             <a
-              href={`http://192.168.1.121:3000/tm/c/message`}
+              href={`https://takomommy.vercel.app/tm/c/message`}
               target="_blank"
               rel="noreferrer noopener"
               className="text-red-mn underline"
