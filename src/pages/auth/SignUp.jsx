@@ -19,12 +19,14 @@ const SignUp = () => {
     email: "",
     number: "",
   });
+  const [loading, setLoading] = React.useState(false);
   const [notif, setNotif] = React.useState({ msg: "", active: false });
 
   const { url } = useGlobalContext();
 
   const signUp = async (e) => {
     e.preventDefault();
+    setLoading(true);
     const { name, surname, email, number, password } = signUpData;
     if (
       textFns.isBothBW(name) ||
@@ -58,6 +60,7 @@ const SignUp = () => {
       console.log(error);
       setNotif({ msg: error.response.data.msg, active: true });
     }
+    setLoading(false);
   };
 
   const handleSignData = ({ name, value }) => {
@@ -94,6 +97,7 @@ const SignUp = () => {
             onChange={(e) => handleSignData(e.target)}
             required={true}
             css="focus:outline-ylw"
+            disabled={loading}
           />
           <Input
             type="text"
@@ -103,6 +107,7 @@ const SignUp = () => {
             onChange={(e) => handleSignData(e.target)}
             required={true}
             css="focus:outline-ylw"
+            disabled={loading}
           />
           <Input
             type="password"
@@ -112,6 +117,7 @@ const SignUp = () => {
             onChange={(e) => handleSignData(e.target)}
             required={true}
             css="focus:outline-ylw"
+            disabled={loading}
           />
           <Input
             type="email"
@@ -121,6 +127,7 @@ const SignUp = () => {
             onChange={(e) => handleSignData(e.target)}
             required={true}
             css="focus:outline-ylw"
+            disabled={loading}
           />
           <Input
             type="text"
@@ -130,8 +137,9 @@ const SignUp = () => {
             onChange={(e) => handleSignData(e.target)}
             required={true}
             css="focus:outline-ylw"
+            disabled={loading}
           />
-          <Button label="Sign Up" css="bg-blk-mn text-wht" />
+          <Button label="Sign Up" css="bg-blk-mn text-wht" disabled={loading} />
         </form>
       </div>
       <div

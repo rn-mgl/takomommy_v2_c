@@ -4,9 +4,8 @@ const Radio = (props) => {
   return (
     <label
       className={`${props.checked} w-full focus:border-none focus:outline-1 text-body font-body text-center
-                text-sm rounded-md cursor-pointer 
-              bg-wht 
-
+                text-sm rounded-md cursor-pointer bg-wht 
+                disabled:bg-neutral-300
                 l-s:text-base`}
       htmlFor={props.label}
     >
@@ -16,6 +15,7 @@ const Radio = (props) => {
         name={props.name}
         value={props.value}
         onChange={props.onChange}
+        disabled={props.disabled}
         id={props.label}
         className="hidden peer"
       />

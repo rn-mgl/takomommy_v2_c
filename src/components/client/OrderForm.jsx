@@ -14,6 +14,7 @@ import Notif from "../global/Notif";
 
 const OrderForm = (props) => {
   const [notif, setNotif] = React.useState({ msg: "", active: false });
+  const [loading, setLoading] = React.useState(false);
   const [orderData, setOrderData] = React.useState({
     variety: "HAM & CHEESE",
     pieces: 8,
@@ -71,7 +72,7 @@ const OrderForm = (props) => {
 
   const placeOrder = async (e) => {
     e.preventDefault();
-
+    setLoading(true);
     orderData.deliveryDate = new Date(orderData.deliveryDate).toLocaleDateString(); // fix UTC
 
     orderData.deliveryTime = new Date(
@@ -111,6 +112,7 @@ const OrderForm = (props) => {
       console.log(error);
       setNotif({ msg: error.response.data.msg, active: true });
     }
+    setLoading(false);
   };
 
   return (
@@ -121,8 +123,10 @@ const OrderForm = (props) => {
       {notif && <Notif notif={notif} setNotif={setNotif} />}
       <form
         onSubmit={(e) => placeOrder(e)}
-        className="w-11/12 h-[92%] bg-white rounded-md p-5 overflow-y-auto cstm-flex-col justify-start gap-5 shadow-md overscroll-contain
-                  l-s:w-7/12"
+        className={`${
+          loading ? "bg-neutral-400" : "bg-white"
+        } w-11/12 h-[92%] bg-white rounded-md p-5 overflow-y-auto cstm-flex-col justify-start gap-5 shadow-md overscroll-contain
+                  l-s:w-7/12`}
       >
         <div className="ml-auto cursor-pointer">
           <AiOutlineClose onClick={props.toggleCanOrder} />
@@ -140,6 +144,7 @@ const OrderForm = (props) => {
             required={true}
             name="variety"
             value={orderData.variety}
+            disabled={loading}
           >
             <option value="HAM & CHEESE">HAM & CHEESE</option>
             <option value="SPAM & CHEESE">SPAM & CHEESE</option>
@@ -159,6 +164,7 @@ const OrderForm = (props) => {
             required={true}
             name="pieces"
             value={orderData.pieces}
+            disabled={loading}
           >
             <option value={8}>8 PIECES</option>
             <option value={10}>10 PIECES</option>
@@ -179,6 +185,7 @@ const OrderForm = (props) => {
             required={true}
             css="cursor-pointer p-3"
             name="sets"
+            disabled={loading}
           />
         </div>
 
@@ -193,6 +200,7 @@ const OrderForm = (props) => {
               name="paymentType"
               label="GCash"
               checked={orderData.paymentType === "GCash"}
+              disabled={loading}
             />
             <Radio
               onChange={(e) => handleOrderData(e.target)}
@@ -200,6 +208,7 @@ const OrderForm = (props) => {
               name="paymentType"
               label="COD"
               checked={orderData.paymentType === "Cash on Delivery"}
+              disabled={loading}
             />
           </div>
         </div>
@@ -215,6 +224,7 @@ const OrderForm = (props) => {
               name="receivingType"
               label="Pick Up"
               checked={orderData.receivingType === "Pick Up"}
+              disabled={loading}
             />
             <Radio
               onChange={(e) => handleOrderData(e.target)}
@@ -222,6 +232,7 @@ const OrderForm = (props) => {
               name="receivingType"
               label="Delivery"
               checked={orderData.receivingType === "Delivery"}
+              disabled={loading}
             />
           </div>
         </div>
@@ -238,6 +249,7 @@ const OrderForm = (props) => {
             required={true}
             css="cursor-pointer p-3"
             name="deliveryDate"
+            disabled={loading}
           />
         </div>
 
@@ -253,6 +265,7 @@ const OrderForm = (props) => {
             required={true}
             css="cursor-pointer p-3"
             name="deliveryTime"
+            disabled={loading}
           />
         </div>
 
@@ -268,6 +281,7 @@ const OrderForm = (props) => {
             required={true}
             name="deliveryAddress"
             css="p-3"
+            disabled={loading}
           />
         </div>
 
@@ -283,6 +297,7 @@ const OrderForm = (props) => {
             required={true}
             name="receiverName"
             css="p-3"
+            disabled={loading}
           />
         </div>
 
@@ -297,6 +312,7 @@ const OrderForm = (props) => {
             label="Clear Form"
             type="button"
             onClick={clearForm}
+            disabled={loading}
           />
 
           <Button
@@ -304,6 +320,7 @@ const OrderForm = (props) => {
               t:w-48"
             type="submit"
             label="Place Order"
+            disabled={loading}
           />
         </div>
       </form>

@@ -4,7 +4,7 @@ const Input = (props) => {
   return (
     <div className="w-full relative">
       {props.required ? (
-        <div className="w-2 h-2 bg-red-mn rounded-full absolute right-0 -translate-y-[0.1rem] translate-x-[0.1rem]" />
+        <div className="w-2 h-2 bg-red-mn rounded-full absolute right-0 -translate-y-[0.1rem] translate-x-[0.1rem] " />
       ) : null}
 
       <input

@@ -16,6 +16,7 @@ const Login = () => {
     candidate_email: "",
     candidate_password: "",
   });
+  const [loading, setLoading] = React.useState(false);
   const [notif, setNotif] = React.useState({ msg: "", active: false });
 
   const { url } = useGlobalContext();
@@ -23,6 +24,7 @@ const Login = () => {
 
   const login = async (e) => {
     e.preventDefault();
+    setLoading(true);
     const { candidate_email, candidate_password } = loginData;
     if (textFns.isBothBW(candidate_email) || textFns.isBothBW(candidate_password)) {
       setNotif({ msg: "Please enter appropriate values.", active: true });
@@ -50,6 +52,7 @@ const Login = () => {
       console.log(error);
       setNotif({ msg: error.response.data.msg, active: true });
     }
+    setLoading(false);
   };
 
   const handleLoginData = ({ name, value }) => {
@@ -85,6 +88,7 @@ const Login = () => {
             onChange={(e) => handleLoginData(e.target)}
             required={true}
             css="focus:outline-ylw"
+            disabled={loading}
           />
           <Input
             type="password"
@@ -94,8 +98,9 @@ const Login = () => {
             onChange={(e) => handleLoginData(e.target)}
             required={true}
             css="focus:outline-ylw"
+            disabled={loading}
           />
-          <Button label="Log In" css="bg-blk-mn text-wht" />
+          <Button label="Log In" css="bg-blk-mn text-wht" disabled={loading} />
         </form>
       </div>
       <div
