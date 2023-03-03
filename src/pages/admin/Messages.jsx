@@ -43,12 +43,11 @@ const Messages = () => {
     <div className="p-5 pb-20 cstm-flex-col gap-5 t:py-20 t:pb-5">
       {notif && <Notif notif={notif} setNotif={setNotif} />}
       <p className="font-head text-2xl">Messages</p>
-      <div className="cstm-flex-col gap-2 w-full t:w-10/12 t:items-start l-s:w-8/12">
+      <div className="cstm-flex-col gap-2 w-full t:w-8/12 t:items-start l-s:w-6/12">
         {users.map((user) => {
           return (
             <div
-              className="bg-blk-mn rounded-md p-3 cstm-flex-row gap-2 w-full text-wht
-                        t:w-fit "
+              className="bg-blk-mn rounded-md p-3 cstm-flex-row gap-2 w-full text-wht"
               key={user._id}
             >
               <div className="p-2">

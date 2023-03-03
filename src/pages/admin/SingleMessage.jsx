@@ -53,7 +53,7 @@ const SingleMessage = () => {
       };
     });
   };
-
+  console.log(messages);
   const getMessages = React.useCallback(async () => {
     try {
       const { data } = await axios.get(`${url}/admin/messages/${messageId}`, {
